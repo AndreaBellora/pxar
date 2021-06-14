@@ -392,7 +392,7 @@ namespace pxar {
      *  This function will both update the bookkeeping value in the pxar::dut
      *  struct and program the actual device.
      */
-    bool setDAC(std::string dacName, uint8_t dacValue, uint8_t rocI2C);
+    bool setDAC(std::string dacName, uint8_t dacValue, uint8_t rocID);
 
     /** Set a DAC value on the DUT for all enabled ROC
      *

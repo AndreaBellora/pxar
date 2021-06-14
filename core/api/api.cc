@@ -671,7 +671,7 @@ statistics pxarCore::getStatistics() {
 // TEST functions
 
 bool pxarCore::setDAC(std::string dacName, uint8_t dacValue, uint8_t rocID) {
-
+  std::cout << "Setting dac " << dacName << " for roc number "<< rocID << " with i2c address: " << _dut->roc[rocID].i2c_address << std::endl;
   if(!status()) {return false;}
 
   // Get the register number and check the range from dictionary:
@@ -686,7 +686,7 @@ bool pxarCore::setDAC(std::string dacName, uint8_t dacValue, uint8_t rocID) {
     // WE ARE NOT USING the I2C address to identify the ROC currently:
     //if(rocit->i2c_address == rocI2C) {
     // But its ROC ID being just counted up from the first:
-    if(rocit->i2c_address == rocID) {
+    if(static_cast<uint8_t>(rocit - _dut->roc.begin()) == rocID) {
 
       // Update the DUT DAC Value:
       ret = rocit->dacs.insert(std::make_pair(dacRegister,dacValue));
@@ -745,12 +745,12 @@ bool pxarCore::setDAC(std::string dacName, uint8_t dacValue) {
 
 void pxarCore::setVcalHighRange() {
   for (std::vector<rocConfig>::iterator rocit = _dut->roc.begin(); rocit != _dut->roc.end(); ++rocit) {
-    setDAC("ctrlreg", (_dut->getDAC(rocit->i2c_address, "ctrlreg")) | 4, rocit->i2c_address );}
+    setDAC("ctrlreg", (_dut->getDAC(static_cast<uint8_t>(rocit - _dut->roc.begin()), "ctrlreg")) | 4, static_cast<uint8_t>(rocit - _dut->roc.begin()));}
 }
 
 void pxarCore::setVcalLowRange() {
   for (std::vector<rocConfig>::iterator rocit = _dut->roc.begin(); rocit != _dut->roc.end(); ++rocit) {
-    setDAC("ctrlreg", (_dut->getDAC(rocit->i2c_address, "ctrlreg")) & 0xfb, rocit->i2c_address);}
+    setDAC("ctrlreg", (_dut->getDAC(static_cast<uint8_t>(rocit - _dut->roc.begin()), "ctrlreg")) & 0xfb, static_cast<uint8_t>(rocit - _dut->roc.begin()));}
 }
 
 uint8_t pxarCore::getDACRange(std::string dacName) {
