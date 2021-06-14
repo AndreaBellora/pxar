@@ -672,7 +672,7 @@ statistics pxarCore::getStatistics() {
 
 
 bool pxarCore::setDAC(std::string dacName, uint8_t dacValue, uint8_t rocID) {
-  std::cout << "Setting dac " << dacName << " for roc number "<< rocID << " with i2c address: " << _dut->roc[rocID].i2c_address << std::endl;
+  // std::cout << "Setting dac " << dacName << " for roc number "<< (int)rocID << " with i2c address: " << _dut->roc[rocID].i2c_address << std::endl;
 
   if(!status()) {return false;}
 

@@ -332,7 +332,7 @@ pixelConfig dut::getPixelConfig(size_t rocid, uint8_t column, uint8_t row) {
 
 
 uint8_t dut::getDAC(size_t rocId, std::string dacName) {
-  std::cout << "Getting dac " << dacName << " for i2c address: " << rocId << std::endl;
+  // std::cout << "Getting dac " << dacName << " for i2c address: " << roc.at(rocId).i2c_address << std::endl;
   if(status() && rocId < roc.size()) {
     // Convert the name to lower case for comparison:
     std::transform(dacName.begin(), dacName.end(), dacName.begin(), ::tolower);
@@ -349,7 +349,7 @@ uint8_t dut::getDAC(size_t rocId, std::string dacName) {
 }
 
 std::vector< std::pair<std::string,uint8_t> > dut::getDACs(size_t rocId) {
-  std::cout << "Getting all dacs for i2c address: " << rocId << std::endl;
+  // std::cout << "Getting all dacs for i2c address: " << roc.at(rocId).i2c_address << std::endl;
   if(status() && rocId < roc.size()) {
     std::vector< std::pair<std::string,uint8_t> > vec;
 
