@@ -332,6 +332,7 @@ pixelConfig dut::getPixelConfig(size_t rocid, uint8_t column, uint8_t row) {
 
 
 uint8_t dut::getDAC(size_t rocI2C, std::string dacName) {
+  std::cout << "Getting DAC " << dacName << " for ROC with i2c address: " << rocI2C << std::endl;
   size_t rocId = 999;
   if(status()) {
     for(std::vector<rocConfig>::iterator rocit = roc.begin(); rocit != roc.end(); ++rocit){
@@ -357,6 +358,7 @@ uint8_t dut::getDAC(size_t rocI2C, std::string dacName) {
 }
 
 std::vector< std::pair<std::string,uint8_t> > dut::getDACs(size_t rocI2C) {
+  std::cout << "Getting all DACs for ROC with i2c address: " << rocI2C << std::endl;
   size_t rocId = 999;
   if(status()) {
     for(std::vector<rocConfig>::iterator rocit = roc.begin(); rocit != roc.end(); ++rocit){
