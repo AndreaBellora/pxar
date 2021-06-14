@@ -670,7 +670,7 @@ statistics pxarCore::getStatistics() {
 
 // TEST functions
 
-bool pxarCore::setDAC(std::string dacName, uint8_t dacValue, uint8_t rocID) {
+bool pxarCore::setDAC(std::string dacName, uint8_t dacValue, uint8_t rocI2C) {
 
   if(!status()) {return false;}
 
@@ -683,10 +683,7 @@ bool pxarCore::setDAC(std::string dacName, uint8_t dacValue, uint8_t rocID) {
   for (rocit = _dut->roc.begin(); rocit != _dut->roc.end(); ++rocit) {
 
     // Set the DAC only in the given ROC (even if that is disabled!)
-    // WE ARE NOT USING the I2C address to identify the ROC currently:
-    //if(rocit->i2c_address == rocI2C) {
-    // But its ROC ID being just counted up from the first:
-    if(rocit->i2c_address == rocID) {
+    if(rocit->i2c_address == rocI2C) {
 
       // Update the DUT DAC Value:
       ret = rocit->dacs.insert(std::make_pair(dacRegister,dacValue));
@@ -705,7 +702,7 @@ bool pxarCore::setDAC(std::string dacName, uint8_t dacValue, uint8_t rocID) {
 
   // We might not have found this ROC:
   if(rocit == _dut->roc.end()) {
-    LOG(logERROR) << "ROC@I2C " << static_cast<int>(rocID) << " does not exist in the DUT!";
+    LOG(logERROR) << "ROC@I2C " << static_cast<int>(rocI2C) << " does not exist in the DUT!";
     return false;
   }
 
@@ -882,7 +879,7 @@ std::vector< std::pair<uint8_t, std::vector<pixel> > > pxarCore::getPulseheightV
   // Reset the original value for the scanned DAC:
   std::vector<rocConfig> enabledRocs = _dut->getEnabledRocs();
   for (std::vector<rocConfig>::iterator rocit = enabledRocs.begin(); rocit != enabledRocs.end(); ++rocit){
-    uint8_t oldDacValue = _dut->getDAC(static_cast<size_t>(rocit - enabledRocs.begin()),dacName);
+    uint8_t oldDacValue = _dut->getDAC(rocit->i2c_address,dacName);
     LOG(logDEBUGAPI) << "Reset DAC \"" << dacName << "\" to original value " << static_cast<int>(oldDacValue);
     _hal->rocSetDAC(static_cast<uint8_t>(rocit - enabledRocs.begin()),dacRegister,oldDacValue);
   }
@@ -938,7 +935,7 @@ std::vector< std::pair<uint8_t, std::vector<pixel> > > pxarCore::getEfficiencyVs
   // Reset the original value for the scanned DAC:
   std::vector<rocConfig> enabledRocs = _dut->getEnabledRocs();
   for (std::vector<rocConfig>::iterator rocit = enabledRocs.begin(); rocit != enabledRocs.end(); ++rocit){
-    uint8_t oldDacValue = _dut->getDAC(static_cast<size_t>(rocit - enabledRocs.begin()),dacName);
+    uint8_t oldDacValue = _dut->getDAC(rocit->i2c_address,dacName);
     LOG(logDEBUGAPI) << "Reset DAC \"" << dacName << "\" to original value " << static_cast<int>(oldDacValue);
     _hal->rocSetDAC(rocit->i2c_address,dacRegister,oldDacValue);
   }
@@ -1023,8 +1020,8 @@ std::vector< std::pair<uint8_t, std::vector<pixel> > > pxarCore::getThresholdVsD
   // Reset the original value for the scanned DAC:
   std::vector<rocConfig> enabledRocs = _dut->getEnabledRocs();
   for (std::vector<rocConfig>::iterator rocit = enabledRocs.begin(); rocit != enabledRocs.end(); ++rocit){
-    uint8_t oldDac1Value = _dut->getDAC(static_cast<size_t>(rocit - enabledRocs.begin()),dac1name);
-    uint8_t oldDac2Value = _dut->getDAC(static_cast<size_t>(rocit - enabledRocs.begin()),dac2name);
+    uint8_t oldDac1Value = _dut->getDAC(rocit->i2c_address,dac1name);
+    uint8_t oldDac2Value = _dut->getDAC(rocit->i2c_address,dac2name);
     LOG(logDEBUGAPI) << "Reset DAC \"" << dac1name << "\" to original value " << static_cast<int>(oldDac1Value);
     LOG(logDEBUGAPI) << "Reset DAC \"" << dac2name << "\" to original value " << static_cast<int>(oldDac2Value);
     _hal->rocSetDAC(rocit->i2c_address,dac1register,oldDac1Value);
@@ -1097,8 +1094,8 @@ std::vector< std::pair<uint8_t, std::pair<uint8_t, std::vector<pixel> > > > pxar
   // Reset the original value for the scanned DAC:
   std::vector<rocConfig> enabledRocs = _dut->getEnabledRocs();
   for (std::vector<rocConfig>::iterator rocit = enabledRocs.begin(); rocit != enabledRocs.end(); ++rocit){
-    uint8_t oldDac1Value = _dut->getDAC(static_cast<size_t>(rocit - enabledRocs.begin()),dac1name);
-    uint8_t oldDac2Value = _dut->getDAC(static_cast<size_t>(rocit - enabledRocs.begin()),dac2name);
+    uint8_t oldDac1Value = _dut->getDAC(rocit->i2c_address,dac1name);
+    uint8_t oldDac2Value = _dut->getDAC(rocit->i2c_address,dac2name);
     LOG(logDEBUGAPI) << "Reset DAC \"" << dac1name << "\" to original value " << static_cast<int>(oldDac1Value);
     LOG(logDEBUGAPI) << "Reset DAC \"" << dac2name << "\" to original value " << static_cast<int>(oldDac2Value);
     _hal->rocSetDAC(rocit->i2c_address,dac1register,oldDac1Value);
@@ -1170,8 +1167,8 @@ std::vector< std::pair<uint8_t, std::pair<uint8_t, std::vector<pixel> > > > pxar
   // Reset the original value for the scanned DAC:
   std::vector<rocConfig> enabledRocs = _dut->getEnabledRocs();
   for (std::vector<rocConfig>::iterator rocit = enabledRocs.begin(); rocit != enabledRocs.end(); ++rocit){
-    uint8_t oldDac1Value = _dut->getDAC(static_cast<size_t>(rocit - enabledRocs.begin()),dac1name);
-    uint8_t oldDac2Value = _dut->getDAC(static_cast<size_t>(rocit - enabledRocs.begin()),dac2name);
+    uint8_t oldDac1Value = _dut->getDAC(rocit->i2c_address,dac1name);
+    uint8_t oldDac2Value = _dut->getDAC(rocit->i2c_address,dac2name);
     LOG(logDEBUGAPI) << "Reset DAC \"" << dac1name << "\" to original value " << static_cast<int>(oldDac1Value);
     LOG(logDEBUGAPI) << "Reset DAC \"" << dac2name << "\" to original value " << static_cast<int>(oldDac2Value);
     _hal->rocSetDAC(rocit->i2c_address,dac1register,oldDac1Value);
