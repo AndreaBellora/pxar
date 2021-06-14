@@ -331,18 +331,9 @@ pixelConfig dut::getPixelConfig(size_t rocid, uint8_t column, uint8_t row) {
 }
 
 
-uint8_t dut::getDAC(size_t rocI2C, std::string dacName) {
-  std::cout << "Getting DAC " << dacName << " for ROC with i2c address: " << rocI2C << std::endl;
-  size_t rocId = 999;
-  if(status()) {
-    for(std::vector<rocConfig>::iterator rocit = roc.begin(); rocit != roc.end(); ++rocit){
-      if (rocit->i2c_address == rocI2C){
-        rocId = rocit - roc.begin();
-        break;
-      }
-    }
-    if(rocId == 999)
-      throw InvalidConfig("Could not find ROC with i2c address: " + rocI2C);
+uint8_t dut::getDAC(size_t rocId, std::string dacName) {
+  std::cout << "Getting dac " << dacName << " for i2c address: " << rocId << std::endl;
+  if(status() && rocId < roc.size()) {
     // Convert the name to lower case for comparison:
     std::transform(dacName.begin(), dacName.end(), dacName.begin(), ::tolower);
 
@@ -357,18 +348,9 @@ uint8_t dut::getDAC(size_t rocI2C, std::string dacName) {
   return 0x0;
 }
 
-std::vector< std::pair<std::string,uint8_t> > dut::getDACs(size_t rocI2C) {
-  std::cout << "Getting all DACs for ROC with i2c address: " << rocI2C << std::endl;
-  size_t rocId = 999;
-  if(status()) {
-    for(std::vector<rocConfig>::iterator rocit = roc.begin(); rocit != roc.end(); ++rocit){
-      if (rocit->i2c_address == rocI2C){
-        rocId = rocit - roc.begin();
-        break;
-      }
-    }
-    if(rocId == 999)
-      throw InvalidConfig("Could not find ROC with i2c address: " + rocI2C);
+std::vector< std::pair<std::string,uint8_t> > dut::getDACs(size_t rocId) {
+  std::cout << "Getting all dacs for i2c address: " << rocId << std::endl;
+  if(status() && rocId < roc.size()) {
     std::vector< std::pair<std::string,uint8_t> > vec;
 
     // Get singleton DAC dictionary object:
@@ -384,7 +366,6 @@ std::vector< std::pair<std::string,uint8_t> > dut::getDACs(size_t rocI2C) {
 }
 
 std::vector< std::pair<std::string,uint8_t> > dut::getTbmDACs(size_t tbmId) {
-
   if(status() && tbmId < tbm.size()) {
     std::vector< std::pair<std::string,uint8_t> > vec;
 
