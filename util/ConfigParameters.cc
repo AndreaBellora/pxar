@@ -253,7 +253,7 @@ vector<pair<string, uint8_t> > ConfigParameters::readDacFile(string fname) {
       ival = atoi(str3.c_str());
     }
     uval = ival;
-    LOG(logINFO) << "Reading line: " << str2 << " " << int(uval);
+    // LOG(logINFO) << "Reading line: " << str2 << " " << int(uval);
     rocDacs.push_back(make_pair(str2, uval));
 
   }
@@ -887,9 +887,8 @@ bool ConfigParameters::writeDacParameterFile(int iroc, vector<pair<string, uint8
 
   RegisterDictionary *a = RegisterDictionary::getInstance();
   for (vector<pair<string,uint8_t> >::iterator idac = v.begin(); idac != v.end(); ++idac) {
-    LOG(logINFO) << "Writing line: " << right << setw(3) << static_cast<int>(a->getRegister(idac->first, ROC_REG)) << " " << left
-         << setw(10) << idac->first << " " << setw(3) << static_cast<int>(idac->second)
-         << endl;
+    // LOG(logINFO) << "Writing line: " << right << setw(3) << static_cast<int>(a->getRegister(idac->first, ROC_REG)) << " " << left
+    //      << setw(10) << idac->first << " " << setw(3) << static_cast<int>(idac->second);
     //    OutputFile << left << setw(10) << idac->first << " " << setw(3) << static_cast<int>(idac->second) << endl;
     OutputFile << right << setw(3) << static_cast<int>(a->getRegister(idac->first, ROC_REG)) << " " << left
 	       << setw(10) << idac->first << " " << setw(3) << static_cast<int>(idac->second)
