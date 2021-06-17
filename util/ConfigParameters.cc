@@ -253,7 +253,7 @@ vector<pair<string, uint8_t> > ConfigParameters::readDacFile(string fname) {
       ival = atoi(str3.c_str());
     }
     uval = ival;
-    LOG(logINFO) << "Reading line: " << str2 << " " << uval << endl;
+    LOG(logINFO) << "Reading line: " << str2 << " " << int(uval);
     rocDacs.push_back(make_pair(str2, uval));
 
   }
