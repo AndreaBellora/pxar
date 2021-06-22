@@ -436,7 +436,7 @@ bool hal::FindDTB(std::string &rpcId) {
     throw UsbConnectionError("Could not find any interface.");
   }
   else { LOG(logDEBUGHAL) << "Found " << interfaceList << " interfaces."; }
-
+  
   // Find attached USB and/or ETH devices that match the DTB naming scheme:
   std::vector<std::pair<std::string, std::string> > deviceList = _testboard->GetDeviceList();
 

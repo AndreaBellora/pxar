@@ -187,13 +187,19 @@ public:
 	  std::string name;
 	  unsigned int nDev;
 	  unsigned int nr;
-
+	  LOG(pxar::logCRITICAL) << "Ciao, sono GetDeviceList.";
 	  for(std::vector<CRpcIo*>::iterator iface = interfaceList.begin(); iface != interfaceList.end(); iface++) {
+	  LOG(pxar::logCRITICAL) << "Provo un'interfaccia.";
 	    try {
 	      if (!EnumFirst(*iface,nDev)) continue;
+	      	  LOG(pxar::logCRITICAL) << "1";
 	      for (nr = 0; nr < nDev; nr++) {
+	      		      	  LOG(pxar::logCRITICAL) << "Provo dev " << nr;
+
 		if (!EnumNext(*iface,name)) continue;
+				      	  LOG(pxar::logCRITICAL) << "2";
 		if (name.size() < 4) continue;
+			      	  LOG(pxar::logCRITICAL) << "3";
 		if (name.compare(0, 4, "DTB_") == 0) deviceList.push_back(std::make_pair(std::string((*iface)->Name()),name));
 	      }
 	    }
