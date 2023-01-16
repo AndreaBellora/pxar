@@ -100,11 +100,16 @@ ELSE(WIN32)
 
 
   IF (ROOT_FOUND)
-
+    STRING(REGEX REPLACE "^([0-9]+\\.[0-9][0-9])+\\/[0-9][0-9]+" "\\1" ROOT_MAJMIN_VER "${ROOTVERSION}")
     STRING(REGEX REPLACE "^([0-9]+)\\.[0-9][0-9]+\\/[0-9][0-9]+" "\\1" ROOT_MAJOR_VER "${ROOTVERSION}")
     IF(ROOT_MAJOR_VER EQUAL 6)
-      MESSAGE("-- ROOT 6 detected - requiring C++11")
-      ADD_DEFINITIONS("-std=c++11 -DROOT_MAJOR_VER=6")
+      IF(ROOT_MAJMIN_VER GREATER 6.16)
+        MESSAGE("-- ROOT 6(>6.16) detected - requiring C++17")
+        ADD_DEFINITIONS("-std=c++17 -DROOT_MAJOR_VER=6")
+      ELSE()
+        MESSAGE("-- ROOT 6(<=6.16) detected - requiring C++11")
+        ADD_DEFINITIONS("-std=c++11 -DROOT_MAJOR_VER=6")
+      ENDIF(ROOT_MAJMIN_VER GREATER 6.16)
     ENDIF(ROOT_MAJOR_VER EQUAL 6)
 
     # ask root-config for the library dir
