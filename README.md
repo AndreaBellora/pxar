@@ -10,10 +10,15 @@ Please visit https://twiki.cern.ch/twiki/bin/view/CMS/Pxar for instructions on h
 Please visit http://psi46.github.io/annotated.html for the DOXYGEN documentation of the code. 
 
 To allow pXar to find the DTB
-
+```
   sudo nano /etc/udev/rules.d/00-usb-permissions.rules
- Add:
-  SUBSYSTEM=="usb", MODE="0660", GROUP="dialout"
+```
+Add:
+```
+SUBSYSTEM=="usb", MODE="0660", GROUP="dialout"
+```
 then
-  sudo usermod -a -G dialout yourusername
+```
+sudo usermod -a -G dialout yourusername
+```
 restart and reconnect the DTB
